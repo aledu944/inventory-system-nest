@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe } from '@nestjs/common';
 
 import { ProductsService } from './products.service';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
@@ -26,8 +26,11 @@ export class ProductsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(+id, updateProductDto);
+  update(
+    @Param('id', ParseUUIDPipe) id: string, 
+    @Body() updateProductDto: UpdateProductDto
+  ) {
+    return this.productsService.update( id, updateProductDto);
   }
 
   @Delete(':id')

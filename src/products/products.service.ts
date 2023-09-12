@@ -60,8 +60,24 @@ export class ProductsService {
     return product;
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const product = await this.productRepository.preload({
+      id,
+      ...updateProductDto
+    })
+
+    if( !product ) throw new NotFoundException('No se encontro el producto');
+    
+    try {
+
+      await this.productRepository.save(product);
+      return product; 
+    
+    } catch (error) {
+    
+      this.handleExceptions(error);
+    
+    }
   }
 
   async remove(id: string) {
@@ -74,12 +90,11 @@ export class ProductsService {
   }
 
   private handleExceptions(error: any){
+    this.logger.error(error);
 
     if( error.code === '23505' ){
       throw new BadRequestException('El producto ya existe')
     }
-
-    this.logger.error(error);
     
     throw new InternalServerErrorException('Internal Server Error')
   }
