@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate } from "typeorm";
+import { Category } from "src/categories/entities/category.entity";
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, OneToMany, ManyToOne } from "typeorm";
 
 @Entity()
 export class Product {
@@ -23,12 +24,16 @@ export class Product {
     
     @Column('float', { default: 0 })
     price: number;
-    
-
-    // category_id: number;
-    
+        
     @Column('boolean', { default: false })
     deleted: boolean;
+
+    @ManyToOne(
+        () => Category,
+        ( category ) => category.products
+    )
+    category: Category
+    
 
 
     @BeforeInsert()
