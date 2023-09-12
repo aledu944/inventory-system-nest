@@ -1,13 +1,15 @@
-import { Injectable, InternalServerErrorException, Logger, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
+import { Injectable, InternalServerErrorException, Logger, BadRequestException, NotFoundException } from '@nestjs/common';
 
 import { Repository } from "typeorm";
+import { validate as isUUID } from "uuid";
 import { Product } from './entities/product.entity';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { Category } from 'src/categories/entities/category.entity';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { validate as isUUID } from "uuid";
+
 
 @Injectable()
 export class ProductsService {
@@ -15,15 +17,28 @@ export class ProductsService {
   private readonly logger = new Logger('ProductService')
   
   constructor(
+
     @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>
+    private readonly productRepository: Repository<Product>,
+  
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>
+  
   ){} 
 
-  async create(createProductDto: CreateProductDto) {    
+  async create(createProductDto: CreateProductDto) {
+    const category = await this.categoryRepository.findOneBy({ 
+      id: createProductDto.categoryId
+    });
+
+    if( !category ) throw new NotFoundException('La categoria no existe');
+
     try {
+
       const product = this.productRepository.create(createProductDto);
-      await this.productRepository.save(product);
+      product.category = category;
       
+      await this.productRepository.save(product);
       return product;
     
     } catch (error) {
@@ -35,6 +50,7 @@ export class ProductsService {
   async findAll(paginationDto: PaginationDto) {
     const { limit = 10, offset = 0 } = paginationDto;
     const products = await this.productRepository.find({
+      relations: ['category'],
       take: limit,
       skip: offset
     });    
@@ -46,11 +62,16 @@ export class ProductsService {
   async findOne(term: string) {
     
     if( isUUID(term) ){
-      const product = await this.productRepository.findOneBy({ id: term });
+      const product = await this.productRepository.find({
+        where: {
+          id: term
+        },
+        relations: {  category: true }
+      });
       
       if( !product ) throw new NotFoundException('No se encontro el producto');
       
-      return product;
+      return product[0];
     }
 
     const product = await this.productRepository.findOneBy({ slug: term });
@@ -61,8 +82,15 @@ export class ProductsService {
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
+    const category = await this.categoryRepository.findOneBy({ 
+      id: updateProductDto.categoryId
+    });
+    
+    if( !category ) throw new NotFoundException('La categoria no existe');
+
     const product = await this.productRepository.preload({
       id,
+      category,
       ...updateProductDto
     })
 
@@ -74,9 +102,7 @@ export class ProductsService {
       return product; 
     
     } catch (error) {
-    
       this.handleExceptions(error);
-    
     }
   }
 

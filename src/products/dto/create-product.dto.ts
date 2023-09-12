@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsBoolean, IsOptional, IsPositive, IsInt } from "class-validator";
+import { IsString, IsNumber, IsBoolean, IsOptional, IsPositive, IsInt, IsUUID,  } from "class-validator";
 
 export class CreateProductDto {
     @IsString({ message: "El nombre es obligatorio" })
@@ -23,7 +23,8 @@ export class CreateProductDto {
     @IsPositive({ message: "Precio no valido" })
     price: number;
     
-    // category_id: number;
+    @IsUUID( 'all' , { message: "Debe agregar una categoria" })
+    categoryId: string;
     
     @IsBoolean()
     @IsOptional()

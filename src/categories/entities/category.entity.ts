@@ -24,7 +24,7 @@ export class Category {
         product => product.category,
         { cascade: true }
     )
-    products: Product;
+    products: Product[];
 
     
     @BeforeInsert()
