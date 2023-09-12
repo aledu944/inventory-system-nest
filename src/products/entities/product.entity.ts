@@ -30,7 +30,8 @@ export class Product {
 
     @ManyToOne(
         () => Category,
-        ( category ) => category.products
+        ( category ) => category.products,
+        { onDelete: 'CASCADE' } 
     )
     category: Category
     
