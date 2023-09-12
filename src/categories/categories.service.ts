@@ -1,26 +1,103 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from 'typeorm';
+
+import { Category } from './entities/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { isUUID } from 'class-validator';
+
+
+
 @Injectable()
 export class CategoriesService {
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+
+  private readonly logger = new Logger('CategoryService');
+
+  constructor(
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>
+  ){}
+
+  async create(createCategoryDto: CreateCategoryDto) {
+    try {
+      const category = this.categoryRepository.create(createCategoryDto);
+      await this.categoryRepository.save(category);
+      
+      return category;    
+    } catch (error) {
+      this.handleExceptions(error);
+    }
   }
 
-  findAll() {
-    return `This action returns all categories`;
+  async findAll(paginationDto: PaginationDto){
+    
+    const { limit = 10, offset = 0 } = paginationDto;
+
+    const categories = await this.categoryRepository.find({
+      take: limit,
+      skip: offset
+    });    
+    
+    return categories;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(term: string) {
+    
+    if( isUUID(term) ){
+      const category = await this.categoryRepository.findOneBy({ id: term });
+      
+      if( !category ) throw new NotFoundException('No se encontro la categoria');
+      
+      return category;
+    }
+
+    const category = await this.categoryRepository.findOneBy({ slug: term });
+    
+    if( !category ) throw new NotFoundException('No se encontro la categoria');
+
+    return category;
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    const category = await this.categoryRepository.preload({
+      id,
+      ...updateCategoryDto
+    })
+
+    if( !category ) throw new NotFoundException('No se encontro el categoria');
+    
+    try {
+
+      await this.categoryRepository.save(category);
+      return category; 
+    
+    } catch (error) {
+    
+      this.handleExceptions(error);
+    
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: string) {
+    const category = await this.findOne(id);
+
+    if( !category ) throw new NotFoundException('No se encontro la categoria');
+        
+    await this.categoryRepository.delete(id);
+    return { message: 'Categoria eliminada' };
+
+  }
+
+  private handleExceptions(error: any){
+    this.logger.error(error);
+
+    if( error.code === '23505' ){
+      throw new BadRequestException('La categoria ya existe')
+    }
+    
+    throw new InternalServerErrorException('Internal Server Error')
   }
 }

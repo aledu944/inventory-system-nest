@@ -1,5 +1,5 @@
 import { Product } from "src/products/entities/product.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Category {
@@ -16,7 +16,7 @@ export class Category {
     @Column('text')
     description: string;
     
-    @Column('text', { unique: true })
+    @Column('text')
     image: string;
 
     @OneToMany(
@@ -26,4 +26,25 @@ export class Category {
     )
     products: Product;
 
+    
+    @BeforeInsert()
+    checkSlugInsert(){
+        if( !this.slug ){
+            this.slug = this.name;
+        } 
+        
+        this.slug = this.slug
+            .toLowerCase()
+            .replaceAll(' ', '-')
+            .replaceAll("'", '')  
+      
+    }
+
+    @BeforeUpdate()
+    checkSlugUpdate(){
+        this.slug = this.slug
+            .toLowerCase()
+            .replaceAll(' ', '-')
+            .replaceAll("'", '')  
+    }
 }
