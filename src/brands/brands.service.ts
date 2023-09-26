@@ -59,7 +59,6 @@ export class BrandsService {
   }
 
   async update(id: string, updateBrandDto: UpdateBrandDto) {
-    console.log(updateBrandDto)
     const brand = await this.brandRepository.preload({
       id,
       ...updateBrandDto
