@@ -1,5 +1,5 @@
 import { Category } from "src/categories/entities/category.entity";
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, OneToMany, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, OneToMany, ManyToOne, UpdateDateColumn, CreateDateColumn } from "typeorm";
 
 @Entity()
 export class Product {
@@ -35,7 +35,11 @@ export class Product {
     )
     category: Category
     
+    @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+    createdAt: Date;
 
+    @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+    updatedAt: Date;
 
     @BeforeInsert()
     checkSlugInsert(){
