@@ -7,6 +7,7 @@ import { CommonModule } from './common/common.module';
 import { CategoriesModule } from './categories/categories.module';
 import { FilesModule } from './files/files.module';
 import { BrandsModule } from './brands/brands.module';
+import { ProvidersModule } from './providers/providers.module';
 
 @Module({
   imports: [
@@ -32,6 +33,8 @@ import { BrandsModule } from './brands/brands.module';
     FilesModule,
 
     BrandsModule,
+
+    ProvidersModule,
 
   ],
 })
