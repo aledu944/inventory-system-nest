@@ -1,5 +1,5 @@
 import { Role } from 'src/roles/entities/role.entity';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -16,17 +16,17 @@ export class User {
     @Column('varchar', { nullable: false, unique: true })
     email: string;
     
-    @Column('text', { nullable: true })
+    @Column('text', { nullable: true, default: null })
     avatar: string;
     
     @ManyToOne(
         () => Role,
         ( role ) => role.users,
-        { onDelete: 'CASCADE' } 
+        { onDelete: 'CASCADE' },
     )
     role: Role
     
-    @Column('enum', {enum: ['male', 'female']})
+    @Column('enum', {enum: ['male', 'female'], default: 'male'})
     gender: string;
     
     @Column('text')
@@ -37,7 +37,5 @@ export class User {
 
     @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
     updatedAt: Date;
-
-
 
 }

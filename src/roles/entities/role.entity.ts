@@ -4,7 +4,7 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Up
 @Entity()
 export class Role {
     @PrimaryGeneratedColumn('increment')
-    id: string;
+    id: number;
 
     @Column('varchar', { unique: true })
     name: string;
