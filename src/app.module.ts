@@ -8,6 +8,8 @@ import { CategoriesModule } from './categories/categories.module';
 import { FilesModule } from './files/files.module';
 import { BrandsModule } from './brands/brands.module';
 import { ProvidersModule } from './providers/providers.module';
+import { AuthModule } from './auth/auth.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -35,6 +37,10 @@ import { ProvidersModule } from './providers/providers.module';
     BrandsModule,
 
     ProvidersModule,
+
+    AuthModule,
+
+    RolesModule,
 
   ],
 })
