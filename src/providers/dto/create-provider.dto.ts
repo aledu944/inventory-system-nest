@@ -13,7 +13,6 @@ export class CreateProviderDto {
 
     @IsString()
     @MinLength(8, { message:'El telefono es muy corto'})
-    @MaxLength(20, { message:'El telefono es muy largo'})
     @IsOptional()
     phone?: string;
 
