@@ -6,6 +6,8 @@ import { User } from './entities/user.entity';
 import { LoginUserDto,CreateUserDto } from './dto';
 import { Role } from 'src/roles/entities/role.entity';
 import * as bcrypt from "bcrypt";
+import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +18,9 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
 
     @InjectRepository(Role)
-    private readonly roleRepository: Repository<Role>
+    private readonly roleRepository: Repository<Role>,
+    
+    private readonly jwtService: JwtService
 
   ){}
 
@@ -37,7 +41,10 @@ export class AuthService {
 
       await this.userRepository.save( user );
 
-      return user;
+      return {
+        ...user,
+        token: this.getJwtToken({ email: user.email })
+      };
 
     } catch (error) {
       this.handleExceptions(error);
@@ -59,11 +66,21 @@ export class AuthService {
     if( !await bcrypt.compareSync( password, user.password ) )
       throw new UnauthorizedException('Credenciales incorrectas')
 
-    return user;
+
+
+    return {
+      ...user,
+      token: this.getJwtToken({ email: user.email })
+    };
     
   }
   
-  
+  private getJwtToken( payload: JwtPayload ){
+    const token = this.jwtService.sign( payload );
+    return token;
+  }
+
+
   private handleExceptions(error: any){
     this.logger.error(error);
 
