@@ -30,7 +30,22 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
         const { id } = payload;
 
-        const user = await this.userRepository.findOneBy({ id });
+        const user = await this.userRepository.find({ 
+            where: {
+                id: id,
+            },
+            relations: {
+                role: true
+            },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                lastname: true,
+                avatar: true,
+            }
+             
+        });
 
         if( !user ){
             throw new UnauthorizedException('Token invalido');
@@ -38,7 +53,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
 
 
-        return user;
+        return user[0];
     }
 
 }
