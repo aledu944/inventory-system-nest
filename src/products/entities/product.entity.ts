@@ -28,7 +28,7 @@ export class Product {
     price: number;
         
     @Column('boolean', { default: false })
-    deleted: boolean;
+    status: boolean;
 
     @ManyToOne(
         () => Category,
