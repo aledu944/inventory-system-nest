@@ -15,7 +15,10 @@ export class AuthController {
   ) { }
 
   @Post('register')
-  createUser(@Body() createUserDto: CreateUserDto) {
+  createUser(
+    @Body() createUserDto: CreateUserDto,
+    roleId: string,
+  ) {
     return this.authService.create(createUserDto);
   }
 
@@ -31,8 +34,6 @@ export class AuthController {
   ) {
 
 
-    console.log(user)
-
     return {
       ok: true,
       user
@@ -44,7 +45,7 @@ export class AuthController {
   @UseGuards(AuthGuard(), UserRoleGuard)
   private2(
     @GetUser() user: User
-  ){
+  ) {
     return {
       ok: 'true 2',
       user
@@ -56,7 +57,7 @@ export class AuthController {
   @Auth(ValidRoles.employee)
   private3(
     @GetUser() user: User
-  ){
+  ) {
     return {
       ok: 'true 2',
       user

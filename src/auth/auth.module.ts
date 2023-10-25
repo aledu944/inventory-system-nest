@@ -19,7 +19,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     ConfigModule,
     TypeOrmModule.forFeature([User, Role]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

@@ -30,7 +30,7 @@ export class CreateUserDto {
     @IsOptional()
     gender?: string;
     
-    @IsInt({ message: "Debe asignamr un rol" })
-    roleId: number;
+    @IsString({ message: "Debe asignamr un rol" })
+    roleId: string;
 
 }

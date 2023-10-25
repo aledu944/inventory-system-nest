@@ -24,7 +24,7 @@ export class AuthService {
 
   ){}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto ) {
     const { password, ...newUserData } = createUserDto;
     try {
       const role = await this.roleRepository.findOneBy({ 

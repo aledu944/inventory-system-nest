@@ -10,6 +10,7 @@ import { BrandsModule } from './brands/brands.module';
 import { ProvidersModule } from './providers/providers.module';
 import { AuthModule } from './auth/auth.module';
 import { RolesModule } from './roles/roles.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { RolesModule } from './roles/roles.module';
 
     RolesModule,
 
+    SeedModule,
   ],
 })
 export class AppModule {}

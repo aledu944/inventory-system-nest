@@ -3,12 +3,12 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Up
 
 @Entity()
 export class Role {
-    @PrimaryGeneratedColumn('increment')
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @Column('varchar', { unique: true })
     name: string;
-
+    
     @OneToMany(
         () => User,
         user => user.role,
