@@ -17,16 +17,16 @@ export class UserRoleGuard implements CanActivate {
     const validRoles: string[] = this.reflector.get(META_ROLES, context.getHandler());
 
     if (!validRoles || validRoles.length === 0) return true;
-
+    console.log(validRoles)
     const req = context.switchToHttp().getRequest();
     const user = req.user as User;
-
+    console.log(user.role.name)
 
     if (!user)
       throw new BadRequestException('Usuario no encontrado');
 
     if (!validRoles.includes(user.role.name))
-      throw new ForbiddenException('El usuario no autorizado a esta funcion');
+      throw new ForbiddenException('El usuario no esta autorizado a esta funcion');
 
 
 

@@ -40,16 +40,7 @@ export const initialData: SeedData = {
             name: "Mattias",
             password: bcrypt.hashSync( "Admin123", 10 ),
             role: null,
-            email: 'admin1@correo.com',
-        },
-        {
-            avatar: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-            gender: "male",
-            lastname: "Duarte",
-            name: "Alexandre",
-            password: bcrypt.hashSync( "Employee123", 10 ),
-            role: null,
-            email: 'admin2@correo.com',
+            email: 'admin@correo.com',
         }
     ],
 }
