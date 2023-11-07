@@ -27,7 +27,7 @@ export class Product {
     @Column('float', { default: 0 })
     price: number;
         
-    @Column('boolean', { default: false })
+    @Column('boolean', { default: true })
     status: boolean;
 
     @ManyToOne(

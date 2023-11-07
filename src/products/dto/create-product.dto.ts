@@ -28,6 +28,13 @@ export class CreateProductDto {
     
     @IsBoolean()
     @IsOptional()
-    deleted?: boolean;
+    status?: boolean;
+
+    @IsUUID( 'all' , { message: "Debe agregar una marca" })
+    brandId: string;
+    
+    @IsUUID( 'all' , { message: "Debe agregar un proveedor" })
+    providerId: string;
+    
 
 }
