@@ -56,7 +56,10 @@ export class AuthService {
     
     const user = await this.userRepository.findOne({ 
       where: { email },
-      select: { email: true, password: true, id: true }
+      select: { email: true, id: true, password: true, name: true, lastname: true },
+      relations: {
+        role: true,
+      }
     });
 
 
@@ -67,13 +70,38 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales incorrectas')
 
 
+    const { id, role, name, lastname } = user; 
 
     return {
-      ...user,
+      user: {
+        id,
+        name,
+        lastname,
+        email,
+        role: role.name
+      },
       token: this.getJwtToken({ id: user.id })
     };
-    
   }
+
+
+  async checkAuth( user: User ){
+
+    const { id, email, role, name, lastname } = user; 
+
+    return {
+      user: {
+        id,
+        name,
+        lastname,
+        email,
+        role: role.name
+      },
+      token: this.getJwtToken({ id: user.id })
+    };
+
+  }
+
   
   private getJwtToken( payload: JwtPayload ){
     const token = this.jwtService.sign( payload );
