@@ -35,4 +35,10 @@ export class AuthController {
     return this.authService.checkAuth(user);
   }
 
+  @Get('users')
+  @Auth(ValidRoles.admin)
+  getAllUsers(){
+    return this.authService.findMany();
+  }
+
 }

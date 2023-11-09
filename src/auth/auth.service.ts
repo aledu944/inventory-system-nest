@@ -102,6 +102,25 @@ export class AuthService {
 
   }
 
+  async findMany(){
+
+    const users = this.userRepository.find({
+      select: {
+        id: true,
+        name: true,
+        lastname: true,
+        email: true,
+        avatar: true,
+        createdAt: true,
+      },
+      relations: ['role'],
+      order: {
+        createdAt: 'DESC'
+      }
+    });
+    return users
+  }
+
   
   private getJwtToken( payload: JwtPayload ){
     const token = this.jwtService.sign( payload );
