@@ -1,5 +1,6 @@
 import { Brand } from "src/brands/entities/brand.entity";
 import { Category } from "src/categories/entities/category.entity";
+import { OrderDetails } from "src/orders/entities/order-details.entity";
 import { Provider } from "src/providers/entities/provider.entity";
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, OneToMany, ManyToOne, UpdateDateColumn, CreateDateColumn } from "typeorm";
 
@@ -50,6 +51,13 @@ export class Product {
         { onDelete: 'CASCADE' } 
     )
     provider: Provider
+
+    @OneToMany(
+        () => OrderDetails,
+        orderDetails => orderDetails.product,
+        { cascade: true }
+    )
+    orderDetails: OrderDetails[];
     
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     createdAt: Date;

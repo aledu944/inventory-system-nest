@@ -1,5 +1,6 @@
 import { User } from "src/auth/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { OrderDetails } from "./order-details.entity";
 
 
 @Entity()
@@ -28,6 +29,13 @@ export class Order {
         { onDelete: 'CASCADE' } 
     )
     client: User;
+
+    @OneToMany(
+        () => OrderDetails,
+        orderDetails => orderDetails.order,
+        { cascade: true }
+    )
+    orderDetails: OrderDetails[];
 
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     createdAt: Date;
