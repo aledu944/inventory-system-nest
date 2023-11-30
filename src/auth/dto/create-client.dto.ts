@@ -1,7 +1,6 @@
-import { IsEmail, IsInt, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
-import { Role } from "src/roles/entities/role.entity";
+import { IsEmail, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
-export class CreateUserDto {
+export class CreateClientDto {
 
     @IsString({ message: 'El nombre es obligatorio' })
     name: string;
@@ -30,7 +29,5 @@ export class CreateUserDto {
     @IsOptional()
     gender?: string;
     
-    @IsString({ message: "Debe asignar un rol" })
-    roleId: string;
 
 }
