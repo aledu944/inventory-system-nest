@@ -11,6 +11,7 @@ import { ProvidersModule } from './providers/providers.module';
 import { AuthModule } from './auth/auth.module';
 import { RolesModule } from './roles/roles.module';
 import { SeedModule } from './seed/seed.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -44,6 +45,9 @@ import { SeedModule } from './seed/seed.module';
     RolesModule,
 
     SeedModule,
+
+    OrdersModule,
+
   ],
 })
 export class AppModule {}

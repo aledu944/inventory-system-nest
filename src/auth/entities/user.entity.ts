@@ -1,5 +1,6 @@
+import { Order } from 'src/orders/entities/order.entity';
 import { Role } from 'src/roles/entities/role.entity';
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -31,6 +32,20 @@ export class User {
     
     @Column('text')
     password: string;
+
+    @OneToMany(
+        () => Order,
+        order => order.user,
+        { cascade: true }
+    )
+    sales: Order[];
+
+    @OneToMany(
+        () => Order,
+        order => order.client,
+        { cascade: true }
+    )
+    shopping: Order[];
 
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     createdAt: Date;
