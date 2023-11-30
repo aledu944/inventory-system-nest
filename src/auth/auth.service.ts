@@ -141,11 +141,7 @@ export class AuthService {
 
   }
 
-<<<<<<< HEAD
 
-  private getJwtToken(payload: JwtPayload) {
-    const token = this.jwtService.sign(payload);
-=======
   async findMany(){
 
     const users = this.userRepository.find({
@@ -168,7 +164,6 @@ export class AuthService {
   
   private getJwtToken( payload: JwtPayload ){
     const token = this.jwtService.sign( payload );
->>>>>>> 92800b0037880aa498074d34d2de53ed37c15c59
     return token;
   }
 
