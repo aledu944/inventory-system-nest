@@ -47,14 +47,30 @@ export class CategoriesService {
   async findOne(term: string) {
     
     if( isUUID(term) ){
-      const category = await this.categoryRepository.findOneBy({ id: term });
+      const category = await this.categoryRepository.findOne({
+        where: {
+          id: term,
+        },
+        relations: {
+          products: true
+        }
+      });
       
       if( !category ) throw new NotFoundException('No se encontro la categoria');
       
       return category;
     }
 
-    const category = await this.categoryRepository.findOneBy({ slug: term });
+    const category = await this.categoryRepository.findOne(
+      {
+        where: {
+          slug: term,
+        },
+        relations: {
+          products: true
+        }
+      }
+    );
     
     if( !category ) throw new NotFoundException('No se encontro la categoria');
 

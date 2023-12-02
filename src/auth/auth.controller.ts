@@ -5,6 +5,7 @@ import { User } from './entities/user.entity';
 import { CreateUserDto, LoginUserDto } from './dto';
 import { Auth, GetUser } from './decorators';
 import { ValidRoles } from './enums/meta-roles';
+import { CreateClientDto } from './dto/create-client.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,6 +20,13 @@ export class AuthController {
     roleId: string,
   ) {
     return this.authService.create(createUserDto);
+  }
+
+  @Post('register/client')
+  createClient(
+    @Body() createClientDto: CreateClientDto
+  ) {
+    return this.authService.createClient(createClientDto);
   }
 
   @Post('login')
