@@ -97,16 +97,22 @@ export class ProductsService {
         relations: ['category', 'brand', 'provider'],
       });
 
-      if (!product) throw new NotFoundException('No se encontro el producto');
+      if (!product || product.length === 0) throw new NotFoundException('No se encontro el producto');
 
       return product[0];
     }
 
-    const product = await this.productRepository.findOneBy({ slug: term });
+    const product = await this.productRepository.find({ 
+      where: {
+        slug: term,
+      },
+      relations: ['category', 'brand', 'provider'],
+      
+    });
 
-    if (!product) throw new NotFoundException('No se encontro el producto');
+    if (!product[0]) throw new NotFoundException('No se encontro el producto');
 
-    return product;
+    return product[0];
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
