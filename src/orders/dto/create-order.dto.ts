@@ -1,4 +1,4 @@
-import { IsArray, IsEnum, IsNumber, IsObject, IsUUID } from "class-validator";
+import { IsArray, IsEnum, IsNumber, IsObject, IsOptional, IsUUID } from "class-validator";
 
 export enum OrderType {
     DELIVERY= "delivery",
@@ -11,7 +11,8 @@ export class CreateOrderDto {
     total: number;
 
     @IsUUID( 'all' , { message: "Debe agregar un vendedor" })
-    userId: string;
+    @IsOptional()
+    userId?: string;
 
     @IsUUID( 'all' , { message: "Debe agregar un cliente" })
     clientId: string;
