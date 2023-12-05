@@ -73,7 +73,7 @@ export class OrdersService {
         })
 
         product.stock -= items[index].quantity;
-        
+
         await this.productRepository.save(product)
         await this.orderDetailsRepository.save(newDetail);
       })
@@ -89,11 +89,72 @@ export class OrdersService {
   }
 
   async findAll() {
-    return `This action returns all orders`;
+
+    const orders = await this.orderRepository.find({
+      relations: {
+        user: true,
+        client: true,
+        orderDetails: {
+          product: true,
+        },
+      }
+    })
+
+    return orders;
   }
 
-  async findOne(id: number) {
-    return `This action returns a #${id} order`;
+  async findOne(id: string) {
+    const order = await this.orderRepository.findOne({
+      where: { id },
+      relations: {
+        client: true,
+        orderDetails: {
+          product: true,
+        }
+      }
+    })
+
+
+    if (!order) throw new NotFoundException('No se pudo obtener la venta')
+    return order;
+  }
+
+
+  async findAllCustomerOrders(clientId: string) {
+    const orders = await this.orderRepository.find({
+      where: {
+        client: {
+          id: clientId,
+        }
+      },
+      relations: {
+        user: true,
+        orderDetails: {
+          product: true,
+        }
+      },
+    })
+
+    return orders;
+  }
+
+
+  async findAllUserSales(userId: string) {
+    const orders = await this.orderRepository.find({
+      where: {
+        user: {
+          id: userId,
+        }
+      },
+      relations: {
+        client: true,
+        orderDetails: {
+          product: true,
+        }
+      },
+    })
+
+    return orders;
   }
 
   async update(id: number, updateOrderDto: UpdateOrderDto) {
@@ -107,7 +168,7 @@ export class OrdersService {
 
   private handleExceptions(error: any) {
     this.logger.error(error.status);
-    if( error.status == 400 ){
+    if (error.status == 400) {
       throw new BadRequestException(error.message)
     }
     throw new InternalServerErrorException('Internal Server Error')
