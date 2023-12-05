@@ -43,6 +43,12 @@ export class AuthController {
     return this.authService.checkAuth(user);
   }
 
+  @Get('clients')
+  @Auth(ValidRoles.admin, ValidRoles.employee)
+  getClients(){
+    return this.authService.getClients();
+  }
+
   @Get('users')
   @Auth(ValidRoles.admin)
   getAllUsers(){

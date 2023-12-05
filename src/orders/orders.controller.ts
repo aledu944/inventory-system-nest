@@ -2,8 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { Auth } from 'src/auth/decorators';
+import { ValidRoles } from 'src/auth/enums/meta-roles';
 
 @Controller('orders')
+@Auth(ValidRoles.admin, ValidRoles.employee)
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 

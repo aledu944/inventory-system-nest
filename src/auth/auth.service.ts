@@ -141,6 +141,27 @@ export class AuthService {
 
   }
 
+  async getClients(){
+    const clients = this.userRepository.find({
+      where: {
+        role: {
+          name: 'user',
+        }
+      },
+      select: {
+        id: true,
+        name: true,
+        lastname: true,
+        email: true,
+        gender: true,
+        createdAt: true,
+        updatedAt: true
+      }
+    })
+
+    return clients;
+  }
+
 
   async findMany(){
 
