@@ -20,7 +20,7 @@ export class OrderDetails {
         ( product ) => product.orderDetails,
         { onDelete: 'CASCADE' } 
     )
-    product: string; 
+    product: Product; 
 
     @Column('int')
     quantity: number;   
